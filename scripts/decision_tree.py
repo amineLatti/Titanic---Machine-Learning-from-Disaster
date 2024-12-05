@@ -89,6 +89,7 @@ class DecisionTree:
         accuracy = np.sum(y_true == y_pred) / len(y_true)
         return accuracy
 
+"""
 train_data = pd.read_csv("train.csv")
 
 X = train_data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']].values
@@ -121,3 +122,4 @@ with open('decision_tree_model.pkl', 'wb') as model_file:
     pickle.dump(tree, model_file)
 
 print("Model saved as 'decision_tree_model.pkl'.")
+"""

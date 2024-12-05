@@ -1,42 +1,25 @@
-from decision_tree import DecisionTree
-import pickle
 import pandas as pd
-import numpy as np
+import pickle
+from preprocessing import preprocess_data
 
-# Load the test data
-test_data = pd.read_csv("test.csv")
+# Load test data
+test_data = pd.read_csv('test.csv')
 
-# Preprocessing the test data (same as the training data preprocessing)
-def preprocess_test_data(df):
-    # Fill missing values
-    df['Age'] = df['Age'].fillna(df['Age'].median())
-    df['Fare'] = df['Fare'].fillna(df['Fare'].median())
-    df['Embarked'] = df['Embarked'].fillna('S')  # Replace missing embarked with 'S'
-    
-    # Encode 'Sex': male=0, female=1
-    df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
-    
-    # Encode 'Embarked': C=0, Q=1, S=2
-    embarked_map = {'C': 0, 'Q': 1, 'S': 2}
-    df['Embarked'] = df['Embarked'].map(embarked_map)
-    
-    # Convert to numpy array
-    return df[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']].values
+# Preprocess test data
+X_test = preprocess_data(test_data, is_train=False)
 
-X_test = preprocess_test_data(test_data)
-
-# Load the saved Decision Tree model
+# Load the saved model
 with open('decision_tree_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
 # Predict survival on the test data
-predictions = model.predict(X_test)
+predictions = model.predict(X_test.values)
 
-# Prepare the submission file
+# Prepare submission file
 submission = test_data[['PassengerId']].copy()
 submission['Survived'] = predictions
 
-# Save the submission file
+# Save submission file
 submission.to_csv('submission.csv', index=False)
 
 print("Submission file 'submission.csv' created successfully!")
